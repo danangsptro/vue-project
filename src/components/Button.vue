@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <button :class="classes" class="bg-orange">
+    <button :class="classes" class="bg-orange ">
         <slot/>
     </button>
 </template>

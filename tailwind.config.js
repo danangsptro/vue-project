@@ -14,7 +14,8 @@ module.exports = {
       green: '#16a34a',
       gray: '#e5e7eb',
       red: '#dc2626',
-      gray500: '#a0aec0'
+      gray500: '#a0aec0',
+      orangeBlue: '#ffedd5'
 
     },
     textColor:{

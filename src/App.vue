@@ -5,6 +5,9 @@ import BtnDng from './components/Button.vue';
 import BoxDng from './components/Box.vue'
 import BtnBackDng from './components/Back.vue'
 import StepperDng from './components/Stepper.vue'
+import { Form, Field, ErrorMessage } from 'vee-validate';
+
+import * as yup from 'yup';
 
 const state = ref(0)
 const checked = ref(false)
@@ -30,6 +33,11 @@ function sendAsDropshiper() {
     dataForm.value.dropShiping = 0
   }
 }
+
+const schema = yup.object({
+  email: yup.string().required().email(),
+  phonenumber: yup.string().required(),
+});
 
 function sum() {
   total.value = dataForm.value.dropShiping + dataForm.value.costOfGoods + dataForm.value.shipment
@@ -89,19 +97,26 @@ function randomOrderId() {
       <div class="grid lg:grid-cols-3 justify-center flex p-8">
         <div class="mx-2 mt-5">
           <p class="text-4xl font-bold text-orange mb-10">Delivery details</p>
-          <div class="mb-6">
-            <input type="email" id="username-success"
+          <Form action="" :validation-schema="schema">
+            <div class="mb-6">
+              <Field type="email" id="username-success" name="email"
+                class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
+                placeholder="Email" v-model="dataForm.email" />
+              <ErrorMessage name="email" />
+
+            </div>
+            <div class="mb-6">
+              <Field type="number" name="phonenumber"
+                class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
+                placeholder="Phone Number" v-model="dataForm.phonenumber" />
+              <ErrorMessage name="phonenumber" />
+
+            </div>
+
+            <textarea
               class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
-              placeholder="Email" v-model="dataForm.email">
-          </div>
-          <div class="mb-6">
-            <input type="number" id="username-success"
-              class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
-              placeholder="Phone Number" v-model="dataForm.phonenumber">
-          </div>
-          <textarea
-            class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
-            placeholder="Delivery Address" v-model="dataForm.deliveryAddress"></textarea>
+              placeholder="Delivery Address" v-model="dataForm.deliveryAddress"></textarea>
+          </form>
         </div>
         <div class="mx-2 mt-5">
           <div class="flex justify-end bg-gray-200 mb-6">
@@ -117,7 +132,7 @@ function randomOrderId() {
               placeholder="Dropshipper Name" v-model="dataForm.dropShiperName">
           </div>
           <div class="mb-6">
-            <input type="number" id="username-success"
+            <input type="number" id="username-success" :disabled="checked === false"
               class="bg-green-50 border border-gray500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3.5 dark:bg-green-100 dark:border-green-400"
               placeholder="Dropshipper phone number" v-model="dataForm.dropShiperPhoneNumber">
           </div>
@@ -142,12 +157,19 @@ function randomOrderId() {
 
               <p class="text-2xl font-bold text-orange">{{ total.toLocaleString() }}</p>
             </div>
-            <div>
+            <div v-if="dataForm.email && dataForm.phonenumber && dataForm.deliveryAddress">
               <btn-dng
                 classes="bg-orange text-white font-bold py-2 px-4 border border-blue-700 rounded min-w-full justify-center"
                 @click="state = 1, sum()">
                 Continue to Payment
               </btn-dng>
+            </div>
+            <div v-else>
+              <button :disabled="!dataForm.email && !dataForm.phonenumber && !dataForm.deliveryAddress"
+                class="bg-orangeBlue text-white font-bold py-2 px-4 border border-blue-700 rounded min-w-full justify-center  focus:outline-none"
+                @click="state = 1, sum()">
+                Continue to Payment
+              </button>
             </div>
           </div>
         </div>
